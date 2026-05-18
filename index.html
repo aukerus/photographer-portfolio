@@ -1302,6 +1302,10 @@ function openQrModal(key) {
   var qrSrc = contactSettings[qrKey] || QR_DEFAULTS[key] || '';
   var label = labelMap[key] || key;
   var text = contactSettings[textKey] || '';
+  if (!text) {
+    var linkEl = document.querySelector('[data-contact="'+key+'"]');
+    if (linkEl) text = linkEl.textContent.trim();
+  }
 
   var wrap = document.querySelector('.qr-img-wrap');
   if (qrSrc) {
