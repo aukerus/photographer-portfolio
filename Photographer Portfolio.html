@@ -503,6 +503,96 @@ a { color: inherit; text-decoration: none; }
   font-size: 12px;
 }
 
+/* ========== QR MODAL ========== */
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+  background: rgba(30,20,14,0.88);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.qr-modal.open { opacity: 1; pointer-events: auto; }
+.qr-modal-card {
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px 36px;
+  text-align: center;
+  max-width: 360px;
+  width: 90vw;
+  box-shadow: 0 32px 64px rgba(60,42,31,0.25), 0 0 0 1px rgba(60,42,31,0.06);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.qr-modal.open .qr-modal-card { transform: translateY(0); }
+.qr-modal-card .qr-img-wrap {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(60,42,31,0.08);
+  padding: 8px;
+}
+.qr-modal-card .qr-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.qr-modal-card .qr-label {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.qr-modal-card .qr-contact-text {
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 300;
+}
+.qr-modal-card .qr-divider {
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  margin: 14px auto;
+}
+.qr-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.qr-modal-close:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+@media (max-width: 640px) {
+  .qr-modal-card { padding: 36px 24px 28px; }
+  .qr-modal-card .qr-img-wrap { width: 160px; height: 160px; }
+  .qr-modal-card .qr-label { font-size: 20px; }
+}
+
 /* ========== SERVICE MODAL ========== */
 .service-card { cursor: pointer; }
 .service-modal {
@@ -964,12 +1054,12 @@ a { color: inherit; text-decoration: none; }
   <p class="section-desc" style="margin: 0 auto var(--spacing-md);">
     无论你是在筹备一场婚礼、需要一组肖像、还是想要为品牌打造视觉内容——我都很愿意听听你的想法。
   </p>
-  <a href="mailto:hello@linyuxi.photo" class="contact-email">hello@linyuxi.photo</a>
+  <a href="mailto:hello@linyuxi.photo" class="contact-email" data-contact="email">hello@linyuxi.photo</a>
   <div class="social-links">
-    <a href="#">小红书</a>
-    <a href="#">Instagram</a>
-    <a href="#">微博</a>
-    <a href="#">微信</a>
+    <a href="#" data-contact="xhs">小红书</a>
+    <a href="#" data-contact="ig">Instagram</a>
+    <a href="#" data-contact="wb">微博</a>
+    <a href="#" data-contact="wx">微信</a>
   </div>
 </section>
 
@@ -990,6 +1080,19 @@ a { color: inherit; text-decoration: none; }
       <p class="service-desc" id="serviceModalDesc"></p>
       <ul class="service-modal-details" id="serviceModalDetails"></ul>
     </div>
+  </div>
+</div>
+
+<!-- ========== QR MODAL ========== -->
+<div class="qr-modal" id="qrModal">
+  <button class="qr-modal-close" id="qrModalClose">&times;</button>
+  <div class="qr-modal-card">
+    <div class="qr-img-wrap">
+      <img src="" alt="" id="qrModalImg">
+    </div>
+    <div class="qr-label" id="qrModalLabel"></div>
+    <div class="qr-divider"></div>
+    <div class="qr-contact-text" id="qrModalText"></div>
   </div>
 </div>
 
@@ -1058,11 +1161,11 @@ var IMG = {
 // 初始化所有图片 src（优先读 IndexedDB 上传的图片）
 var storedImgs = {};
 (function initImages() {
-  var dbReq = indexedDB.open('portfolio_db', 1);
+  var dbReq = indexedDB.open('portfolio_db', 2);
   dbReq.onupgradeneeded = function(e) {
-    if (!e.target.result.objectStoreNames.contains('images')) {
-      e.target.result.createObjectStore('images');
-    }
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('images')) db.createObjectStore('images');
+    if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
   };
   dbReq.onsuccess = function(e) {
     var db = e.target.result;
@@ -1081,10 +1184,56 @@ var storedImgs = {};
     };
   };
   dbReq.onerror = function() {
-    // IndexedDB 不可用时直接使用默认图片
     applyImages();
   };
 })();
+
+// 监听后台管理页的图片更新，自动同步无需手动刷新
+try {
+  var syncChannel = new BroadcastChannel('portfolio_sync');
+  syncChannel.onmessage = function() {
+    // 重新加载图片
+    (function reloadImages() {
+      var dbReq2 = indexedDB.open('portfolio_db', 2);
+      dbReq2.onsuccess = function(e) {
+        var db = e.target.result;
+        var tx = db.transaction('images','readonly');
+        var store = tx.objectStore('images');
+        var kReq = store.getAllKeys();
+        var vReq = store.getAll();
+        kReq.onsuccess = function() {
+          var keys = kReq.result;
+          vReq.onsuccess = function() {
+            var vals = vReq.result;
+            keys.forEach(function(k, i) { storedImgs[k] = vals[i]; });
+            db.close();
+            applyImages();
+          };
+        };
+      };
+    })();
+    // 重新加载联系方式
+    (function reloadContact() {
+      var dbReq3 = indexedDB.open('portfolio_db', 2);
+      dbReq3.onsuccess = function(e) {
+        var db = e.target.result;
+        var tx = db.transaction('settings','readonly');
+        var kReq = tx.objectStore('settings').getAllKeys();
+        var vReq = tx.objectStore('settings').getAll();
+        kReq.onsuccess = function() {
+          var keys = kReq.result;
+          vReq.onsuccess = function() {
+            var vals = vReq.result;
+            var settings = {};
+            keys.forEach(function(k,i) { settings[k] = vals[i]; });
+            db.close();
+            applyContact(settings);
+          };
+        };
+      };
+    })();
+  };
+} catch(e) { /* BroadcastChannel not supported */ }
 
 function applyImages() {
   document.querySelectorAll('[data-img]').forEach(function(el) {
@@ -1092,7 +1241,101 @@ function applyImages() {
     if (storedImgs[key]) { el.src = storedImgs[key]; }
     else if (IMG[key]) { el.src = IMG[key]; }
   });
+  loadContactInfo();
 }
+
+function loadContactInfo() {
+  var dbReq2 = indexedDB.open('portfolio_db', 2);
+  dbReq2.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
+  };
+  dbReq2.onsuccess = function(e) {
+    var db = e.target.result;
+    var tx = db.transaction('settings','readonly');
+    var kReq = tx.objectStore('settings').getAllKeys();
+    var vReq = tx.objectStore('settings').getAll();
+    kReq.onsuccess = function() {
+      var keys = kReq.result;
+      vReq.onsuccess = function() {
+        var vals = vReq.result;
+        var settings = {};
+        keys.forEach(function(k,i) { settings[k] = vals[i]; });
+        db.close();
+        applyContact(settings);
+      };
+    };
+  };
+  dbReq2.onerror = function() { /* use defaults */ };
+}
+
+var contactSettings = {}; // 全局缓存
+
+function applyContact(s) {
+  contactSettings = s || {};
+  var email = s.contact_email;
+  var emailEl = document.querySelector('[data-contact="email"]');
+  if (email && emailEl) {
+    emailEl.textContent = email;
+    emailEl.href = 'mailto:' + email;
+  }
+  var socialMap = { xhs:'contact_xhs', ig:'contact_ig', wb:'contact_wb', wx:'contact_wx' };
+  Object.keys(socialMap).forEach(function(key) {
+    var val = s[socialMap[key]];
+    var el = document.querySelector('[data-contact="'+key+'"]');
+    if (val && el) el.textContent = val;
+  });
+}
+
+// === QR 弹窗 ===
+var qrModal = document.getElementById('qrModal');
+var qrModalImg = document.getElementById('qrModalImg');
+var qrModalLabel = document.getElementById('qrModalLabel');
+var qrModalText = document.getElementById('qrModalText');
+
+function openQrModal(key) {
+  var labelMap = { xhs:'小红书', ig:'Instagram', wb:'微博', wx:'微信' };
+  var qrKey = 'qr_' + key;
+  var textKey = 'contact_' + key;
+  var qrSrc = contactSettings[qrKey] || '';
+  var label = labelMap[key] || key;
+  var text = contactSettings[textKey] || '';
+
+  var wrap = document.querySelector('.qr-img-wrap');
+  if (qrSrc) {
+    qrModalImg.src = qrSrc;
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+  qrModalLabel.textContent = label;
+  qrModalText.textContent = text || '暂无联系方式';
+  qrModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQrModal() {
+  qrModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.social-links a[data-contact]').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.preventDefault();
+    var key = el.getAttribute('data-contact');
+    if (key && key !== 'email') openQrModal(key);
+  });
+});
+
+document.getElementById('qrModalClose').addEventListener('click', closeQrModal);
+qrModal.addEventListener('click', function(e) {
+  if (e.target === qrModal) closeQrModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && qrModal.classList.contains('open')) {
+    closeQrModal();
+  }
+});
   // === NAVIGATION SCROLL ===
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
