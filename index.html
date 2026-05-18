@@ -1293,11 +1293,13 @@ var qrModalImg = document.getElementById('qrModalImg');
 var qrModalLabel = document.getElementById('qrModalLabel');
 var qrModalText = document.getElementById('qrModalText');
 
+var QR_DEFAULTS = { wx: 'images/wechat-qr.jpg' };
+
 function openQrModal(key) {
   var labelMap = { xhs:'小红书', ig:'Instagram', wb:'微博', wx:'微信' };
   var qrKey = 'qr_' + key;
   var textKey = 'contact_' + key;
-  var qrSrc = contactSettings[qrKey] || '';
+  var qrSrc = contactSettings[qrKey] || QR_DEFAULTS[key] || '';
   var label = labelMap[key] || key;
   var text = contactSettings[textKey] || '';
 
