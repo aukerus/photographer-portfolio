@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片管理 — 林予曦摄影</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#FBF7F2; --bg-card:#F5EFE7; --text:#3C2A1F; --text-muted:#9B8B7D; --accent:#C0673D; --accent-2:#7D9B76; --radius:16px; --shadow:0 2px 16px rgba(60,42,31,.06); --font-display:'Newsreader','Noto Serif SC',Georgia,serif; --font-body:'Outfit','PingFang SC','Microsoft YaHei',system-ui,sans-serif; }
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+body{ background:var(--bg); color:var(--text); font-family:var(--font-body); font-weight:300; font-size:15px; -webkit-font-smoothing:antialiased; padding:40px; }
+.header{ max-width:1280px; margin:0 auto 40px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.header h1{ font-family:var(--font-display); font-size:clamp(28px,3vw,40px); font-weight:500; }
+.btn{ padding:10px 22px; border-radius:24px; font-size:14px; font-weight:500; cursor:pointer; border:none; transition:all .2s; font-family:var(--font-body); }
+.btn-primary{ background:var(--text); color:var(--bg); } .btn-primary:hover{ background:var(--accent); }
+.btn-outline{ background:transparent; border:1px solid rgba(60,42,31,.2); color:var(--text); } .btn-outline:hover{ border-color:var(--accent); color:var(--accent); }
+.btn-danger{ background:transparent; border:1px solid #d44; color:#d44; } .btn-danger:hover{ background:#d44; color:#fff; }
+.grid{ max-width:1280px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+.slot{ background:var(--bg-card); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:box-shadow .3s; }
+.slot:hover{ box-shadow:0 8px 32px rgba(60,42,31,.1); }
+.slot.uploaded{ border:2px solid var(--accent-2); }
+.slot-preview{ aspect-ratio:4/3; overflow:hidden; background:#e8e2d8; position:relative; }
+.slot-preview img{ width:100%; height:100%; object-fit:cover; }
+.slot-preview .ph{ display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); font-size:14px; }
+.slot-info{ padding:14px 16px; } .slot-label{ font-weight:500; font-size:15px; margin-bottom:4px; } .slot-type{ font-size:12px; color:var(--text-muted); }
+.slot-actions{ padding:0 16px 14px; display:flex; gap:8px; } .slot-actions .btn{ font-size:12px; padding:6px 14px; }
+.upload-badge{ position:absolute; top:10px; right:10px; background:var(--accent-2); color:#fff; font-size:11px; padding:3px 10px; border-radius:10px; font-weight:500; }
+.stats{ max-width:1280px; margin:0 auto 24px; color:var(--text-muted); font-size:13px; }
+input[type="file"]{ display:none; }
+.contact-editor{ max-width:1280px; margin:0 auto 32px; background:var(--bg-card); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); }
+.contact-editor h3{ font-family:var(--font-display); font-size:20px; margin-bottom:16px; }
+.contact-row{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
+.contact-row label{ width:80px; font-size:13px; font-weight:500; color:var(--text-muted); flex-shrink:0; }
+.contact-row input[type="text"]{ flex:1; min-width:200px; padding:8px 12px; border:1px solid rgba(60,42,31,.15); border-radius:8px; font-size:14px; font-family:var(--font-body); background:var(--bg); color:var(--text); }
+.contact-row input[type="text"]:focus{ outline:none; border-color:var(--accent); }
+.contact-hint{ font-size:12px; color:var(--text-muted); margin-top:4px; }
+.qr-upload-btn{ font-size:11px!important; padding:5px 10px!important; flex-shrink:0; }
+.qr-preview{ flex-shrink:0; }
+.qr-preview img{ height:32px; width:32px; object-fit:cover; border-radius:4px; border:1px solid rgba(60,42,31,.1); vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>图片管理</h1>
+    <p style="color:var(--text-muted);margin-top:4px;">上传后自动保存，刷新主页即可看到效果</p>
+  </div>
+  <div style="display:flex;gap:12px;">
+    <a href="Photographer Portfolio.html" class="btn btn-outline">← 返回主页</a>
+    <button class="btn btn-danger" onclick="resetAll()">清除全部</button>
+  </div>
+</div>
+
+<div class="stats" id="stats">加载中...</div>
+
+<div class="contact-editor">
+  <h3>联系方式设置</h3>
+  <div class="contact-row">
+    <label>邮箱</label>
+    <input type="text" id="contactEmail" placeholder="hello@example.com">
+    <span style="width:100px;flex-shrink:0"></span>
+  </div>
+  <div class="contact-row">
+    <label>小红书</label>
+    <input type="text" id="contactXhs" placeholder="小红书号或链接">
+    <button class="btn btn-outline qr-upload-btn" data-qr="qr_xhs">上传二维码</button>
+    <span class="qr-preview" id="prev-qr_xhs"></span>
+  </div>
+  <div class="contact-row">
+    <label>Instagram</label>
+    <input type="text" id="contactIg" placeholder="Instagram 用户名">
+    <button class="btn btn-outline qr-upload-btn" data-qr="qr_ig">上传二维码</button>
+    <span class="qr-preview" id="prev-qr_ig"></span>
+  </div>
+  <div class="contact-row">
+    <label>微博</label>
+    <input type="text" id="contactWb" placeholder="微博昵称或链接">
+    <button class="btn btn-outline qr-upload-btn" data-qr="qr_wb">上传二维码</button>
+    <span class="qr-preview" id="prev-qr_wb"></span>
+  </div>
+  <div class="contact-row">
+    <label>微信</label>
+    <input type="text" id="contactWx" placeholder="微信号">
+    <button class="btn btn-outline qr-upload-btn" data-qr="qr_wx">上传二维码</button>
+    <span class="qr-preview" id="prev-qr_wx"></span>
+  </div>
+  <div style="margin-top:12px;">
+    <button class="btn btn-primary" id="saveContact">保存联系方式</button>
+    <span class="contact-hint" style="margin-left:12px;" id="contactStatus"></span>
+  </div>
+</div>
+
+<div class="grid" id="grid">加载中...</div>
+
+<script>
+// === IndexedDB ===
+var DB = null;
+var dbReady = false;
+var dbQueue = [];
+
+function dbDo(fn) {
+  if (dbReady) { fn(DB); return; }
+  dbQueue.push(fn);
+}
+
+function runQueue() {
+  dbReady = true;
+  dbQueue.forEach(function(fn) { fn(DB); });
+  dbQueue = [];
+}
+
+(function initDB() {
+  var req = indexedDB.open('portfolio_db', 2);
+  req.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('images')) db.createObjectStore('images');
+    if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
+  };
+  req.onsuccess = function(e) {
+    DB = e.target.result;
+    runQueue();
+  };
+  req.onerror = function() {
+    document.getElementById('stats').textContent = '❌ 无法打开本地数据库，请检查浏览器是否支持 IndexedDB';
+    document.getElementById('grid').textContent = '';
+  };
+})();
+
+function notifySync() {
+  try { new BroadcastChannel('portfolio_sync').postMessage('changed'); } catch(e) {}
+}
+
+function dbPut(key, val, cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('images','readwrite');
+    tx.objectStore('images').put(val, key);
+    tx.oncomplete = function() { notifySync(); if(cb) cb(true); };
+    tx.onabort = function() { if(cb) cb(false); };
+  });
+}
+
+function dbGetAll(cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('images','readonly');
+    var store = tx.objectStore('images');
+    var kReq = store.getAllKeys();
+    var vReq = store.getAll();
+    var result = {};
+    kReq.onsuccess = function() {
+      var keys = kReq.result;
+      vReq.onsuccess = function() {
+        var vals = vReq.result;
+        keys.forEach(function(k,i) { result[k] = vals[i]; });
+        cb(result);
+      };
+    };
+  });
+}
+
+function dbDelete(key, cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('images','readwrite');
+    tx.objectStore('images').delete(key);
+    tx.oncomplete = function() { notifySync(); if(cb) cb(); };
+  });
+}
+
+function dbClear(cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('images','readwrite');
+    tx.objectStore('images').clear();
+    tx.oncomplete = function() { notifySync(); if(cb) cb(); };
+  });
+}
+
+function dbSetSetting(key, val, cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('settings','readwrite');
+    tx.objectStore('settings').put(val, key);
+    tx.oncomplete = function() { if(cb) cb(true); };
+  });
+}
+
+function dbGetSetting(key, cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('settings','readonly');
+    var req = tx.objectStore('settings').get(key);
+    req.onsuccess = function() { cb(req.result); };
+  });
+}
+
+function dbGetAllSettings(cb) {
+  dbDo(function(db) {
+    var tx = db.transaction('settings','readonly');
+    var kReq = tx.objectStore('settings').getAllKeys();
+    var vReq = tx.objectStore('settings').getAll();
+    var result = {};
+    kReq.onsuccess = function() {
+      var keys = kReq.result;
+      vReq.onsuccess = function() {
+        var vals = vReq.result;
+        keys.forEach(function(k,i) { result[k] = vals[i]; });
+        cb(result);
+      };
+    };
+  });
+}
+
+// === Slots ===
+var slots = [
+  { key:'aboutPortrait',  label:'摄影师肖像',       hint:'关于我区域 — 建议竖构图肖像照' },
+  { key:'gallery1',       label:'暮光 · 人像系列',   hint:'精选作品 — 人物肖像照' },
+  { key:'gallery2',       label:'城市碎片',          hint:'精选作品 — 城市建筑/街景' },
+  { key:'gallery3',       label:'晨光笔记',          hint:'精选作品 — 晨光/自然风光' },
+  { key:'gallery4',       label:'婚礼纪',            hint:'精选作品 — 中式婚礼照片' },
+  { key:'gallery5',       label:'静谧时刻',          hint:'精选作品 — 安静自然风光' },
+  { key:'gallery6',       label:'人间烟火',          hint:'精选作品 — 街市/生活场景' },
+  { key:'gallery7',       label:'山海之间',          hint:'精选作品 — 山海自然景观' },
+  { key:'gallery8',       label:'家庭肖像',          hint:'精选作品 — 家庭活动照片' },
+  { key:'gallery9',       label:'旅途光影',          hint:'精选作品 — 旅行/旅途照片' },
+  { key:'svcWedding',     label:'服务 · 婚礼纪实',    hint:'服务弹窗 — 婚礼相关照片' },
+  { key:'svcPortrait',    label:'服务 · 人像写真',    hint:'服务弹窗 — 人像写真照片' },
+  { key:'svcCommercial',  label:'服务 · 商业拍摄',    hint:'服务弹窗 — 商业产品照片' }
+];
+
+function fmtSize(n) {
+  if (!n || n<0) return '0 B';
+  if (n<1024) return n+' B';
+  if (n<1048576) return (n/1024).toFixed(1)+' KB';
+  return (n/1048576).toFixed(1)+' MB';
+}
+
+// === Render ===
+function render() {
+  dbGetAll(function(data) {
+    var html = '';
+    slots.forEach(function(s) {
+      var src = data[s.key] || '';
+      var has = !!src;
+      html += '<div class="slot'+(has?' uploaded':'')+'" id="slot-'+s.key+'">';
+      html += '<div class="slot-preview" id="prev-'+s.key+'">';
+      if (src) html += '<img src="'+src+'" alt=""><span class="upload-badge">已上传</span>';
+      else html += '<div class="ph">点击下方按钮上传</div>';
+      html += '</div>';
+      html += '<div class="slot-info"><div class="slot-label">'+s.label+'</div><div class="slot-type">'+s.hint+'</div></div>';
+      html += '<div class="slot-actions">';
+      html += '<button class="btn btn-primary" data-key="'+s.key+'" data-act="upload">上传替换</button>';
+      if (has) html += '<button class="btn btn-outline" data-key="'+s.key+'" data-act="remove">清除</button>';
+      html += '</div></div>';
+    });
+    document.getElementById('grid').innerHTML = html;
+    updateStats(data);
+  });
+}
+
+function updateStats(data) {
+  var keys = Object.keys(data).filter(function(k) { return data[k]; });
+  var total = 0;
+  var parts = [];
+  keys.forEach(function(k) {
+    var sz = data[k].length;
+    total += sz;
+    parts.push(k+' '+fmtSize(sz));
+  });
+  document.getElementById('stats').innerHTML =
+    '已上传 <b>'+keys.length+'</b> / '+slots.length+' 张 | 总占用 <b>'+fmtSize(total)+'</b>'+
+    (parts.length ? '<br><small>'+parts.join(' &nbsp;|&nbsp; ')+'</small>' : '');
+}
+
+function updateSlot(key, src) {
+  var slot = document.getElementById('slot-'+key);
+  var prev = document.getElementById('prev-'+key);
+  slot.classList.toggle('uploaded', !!src);
+  if (src) prev.innerHTML = '<img src="'+src+'" alt=""><span class="upload-badge">已上传</span>';
+  else prev.innerHTML = '<div class="ph">点击下方按钮上传</div>';
+  // update actions
+  var acts = slot.querySelector('.slot-actions');
+  var h = '<button class="btn btn-primary" data-key="'+key+'" data-act="upload">上传替换</button>';
+  if (src) h += '<button class="btn btn-outline" data-key="'+key+'" data-act="remove">清除</button>';
+  acts.innerHTML = h;
+  dbGetAll(updateStats);
+}
+
+// === Events (delegation) ===
+document.getElementById('grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  var key = btn.dataset.key;
+  var act = btn.dataset.act;
+  if (!key || !act) return;
+
+  if (act === 'upload') {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = function() {
+      var file = inp.files[0];
+      if (!file) return;
+      var preview = document.getElementById('prev-'+key);
+      preview.innerHTML = '<div class="ph" style="color:var(--accent)">压缩中...</div>';
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        // Canvas compress
+        var img = new Image();
+        img.onload = function() {
+          var w = img.width, h = img.height;
+          var max = 2000;
+          if (w > max || h > max) { var r = Math.min(max/w, max/h); w = Math.round(w*r); h = Math.round(h*r); }
+          var cvs = document.createElement('canvas');
+          cvs.width = w; cvs.height = h;
+          cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+          var compressed = cvs.toDataURL('image/jpeg', 0.85);
+          dbPut(key, compressed, function(ok) {
+            if (!ok) { alert('保存失败'); preview.innerHTML = '<div class="ph">点击下方按钮上传</div>'; return; }
+            console.log(key+': '+w+'×'+h+' | '+fmtSize(compressed.length*0.75));
+            updateSlot(key, compressed);
+          });
+        };
+        img.onerror = function() { alert('图片处理失败'); preview.innerHTML = '<div class="ph">点击下方按钮上传</div>'; };
+        img.src = ev.target.result;
+      };
+      reader.onerror = function() { alert('文件读取失败'); };
+      reader.readAsDataURL(file);
+    };
+    inp.click();
+  }
+
+  if (act === 'remove') {
+    dbDelete(key, function() { updateSlot(key, null); });
+  }
+});
+
+function resetAll() {
+  if (!confirm('确定要清除所有上传的图片吗？此操作不可恢复。')) return;
+  dbClear(function() { render(); });
+}
+
+// === 联系方式 ===
+var contactDefaults = {
+  email: 'hello@linyuxi.photo',
+  xhs: '小红书',
+  ig: 'Instagram',
+  wb: '微博',
+  wx: '微信'
+};
+
+function loadContactFields() {
+  dbGetAllSettings(function(settings) {
+    document.getElementById('contactEmail').value = settings.contact_email || contactDefaults.email;
+    document.getElementById('contactXhs').value = settings.contact_xhs || contactDefaults.xhs;
+    document.getElementById('contactIg').value = settings.contact_ig || contactDefaults.ig;
+    document.getElementById('contactWb').value = settings.contact_wb || contactDefaults.wb;
+    document.getElementById('contactWx').value = settings.contact_wx || contactDefaults.wx;
+    // 加载二维码预览
+    ['qr_xhs','qr_ig','qr_wb','qr_wx'].forEach(function(qrKey) {
+      var src = settings[qrKey];
+      var prev = document.getElementById('prev-'+qrKey);
+      if (src && prev) prev.innerHTML = '<img src="'+src+'" alt="QR">';
+    });
+  });
+}
+
+document.getElementById('saveContact').addEventListener('click', function() {
+  var data = {
+    contact_email: document.getElementById('contactEmail').value.trim(),
+    contact_xhs: document.getElementById('contactXhs').value.trim(),
+    contact_ig: document.getElementById('contactIg').value.trim(),
+    contact_wb: document.getElementById('contactWb').value.trim(),
+    contact_wx: document.getElementById('contactWx').value.trim()
+  };
+  var count = 0;
+  var keys = Object.keys(data);
+  keys.forEach(function(k) {
+    dbSetSetting(k, data[k], function() {
+      count++;
+      if (count === keys.length) {
+        notifySync();
+        document.getElementById('contactStatus').textContent = '已保存';
+        setTimeout(function() { document.getElementById('contactStatus').textContent = ''; }, 2000);
+      }
+    });
+  });
+});
+
+// QR 上传（事件委托在 contact-editor）
+document.querySelector('.contact-editor').addEventListener('click', function(e) {
+  var btn = e.target.closest('.qr-upload-btn');
+  if (!btn) return;
+  var qrKey = btn.getAttribute('data-qr');
+  if (!qrKey) return;
+
+  var inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = function() {
+    var file = inp.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      // 压缩二维码小图
+      var img = new Image();
+      img.onload = function() {
+        var size = Math.min(img.width, img.height, 400);
+        var cvs = document.createElement('canvas');
+        cvs.width = size; cvs.height = size;
+        cvs.getContext('2d').drawImage(img, 0, 0, size, size);
+        var compressed = cvs.toDataURL('image/jpeg', 0.8);
+        dbSetSetting(qrKey, compressed, function() {
+          notifySync();
+          var prev = document.getElementById('prev-'+qrKey);
+          if (prev) prev.innerHTML = '<img src="'+compressed+'" alt="QR">';
+        });
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+});
+
+loadContactFields();
+
+// Start
+render();
+</script>
+</body>
+</html>

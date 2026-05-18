@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>林予曦 | 独立摄影师</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ========== DESIGN SYSTEM ========== */
+:root {
+  --bg: #FBF7F2;
+  --bg-card: #F5EFE7;
+  --text: #3C2A1F;
+  --text-muted: #9B8B7D;
+  --accent: #C0673D;
+  --accent-hover: #A85530;
+  --accent-2: #7D9B76;
+  --accent-2-light: #E8EFE5;
+  --border: rgba(60,42,31,0.08);
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 8px rgba(60,42,31,0.04);
+  --shadow: 0 2px 16px rgba(60,42,31,0.06);
+  --shadow-hover: 0 8px 32px rgba(60,42,31,0.10);
+  --font-display: 'Newsreader', 'Noto Serif SC', 'Source Han Serif SC', Georgia, serif;
+  --font-body: 'Outfit', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-script: 'Caveat', 'KaiTi', cursive;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 32px;
+  --spacing-lg: 64px;
+  --spacing-xl: 120px;
+  --spacing-2xl: 160px;
+  --max-width: 1280px;
+  --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+::selection { background: var(--accent); color: #fff; }
+
+img { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ========== NAVIGATION ========== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.3s, backdrop-filter 0.3s, padding 0.3s;
+}
+.nav.scrolled {
+  background: rgba(251,247,242,0.85);
+  backdrop-filter: blur(16px);
+  padding: 12px 40px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ========== HERO ========== */
+.hero {
+  padding: 0 40px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+.hero-image {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  box-shadow: var(--shadow-hover);
+}
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--transition);
+}
+.hero-image:hover img { transform: scale(1.03); }
+.hero-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(60,42,31,0.15) 0%, transparent 40%);
+  pointer-events: none;
+}
+.hero-text {
+  padding-left: var(--spacing-md);
+}
+.hero-tag {
+  display: inline-block;
+  font-family: var(--font-script);
+  font-size: clamp(22px, 2vw, 28px);
+  color: var(--accent-2);
+  margin-bottom: var(--spacing-sm);
+}
+.hero-text h1 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7vw, 88px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--spacing-sm);
+}
+.hero-text h1 span {
+  display: block;
+  color: var(--accent);
+}
+.hero-text p {
+  font-size: clamp(17px, 1.4vw, 20px);
+  color: var(--text-muted);
+  max-width: 440px;
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  background: var(--text);
+  color: var(--bg);
+  border-radius: 32px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all var(--transition);
+  cursor: pointer;
+  border: none;
+}
+.hero-cta:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(192,103,61,0.3);
+}
+.hero-cta .arrow {
+  transition: transform 0.2s;
+}
+.hero-cta:hover .arrow { transform: translateX(4px); }
+
+/* ========== SECTION COMMONS ========== */
+.section {
+  padding: var(--spacing-xl) 40px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.section-label {
+  font-family: var(--font-script);
+  font-size: clamp(20px, 1.8vw, 26px);
+  color: var(--accent-2);
+  margin-bottom: var(--spacing-xs);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.5vw, 60px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--spacing-md);
+}
+.section-desc {
+  color: var(--text-muted);
+  max-width: 560px;
+  font-size: clamp(16px, 1.2vw, 18px);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ========== GALLERY ========== */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--spacing-sm);
+  grid-auto-rows: 240px;
+}
+.gallery-item {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-card);
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--transition);
+  will-change: transform;
+}
+.gallery-item:hover img { transform: scale(1.05); }
+.gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(60,42,31,0.35) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.gallery-item:hover::after { opacity: 1; }
+.gallery-item-label {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.3s;
+  z-index: 1;
+}
+.gallery-item:hover .gallery-item-label { opacity: 1; transform: translateY(0); }
+.gallery-item:nth-child(1) { grid-column: span 6; grid-row: span 2; }
+.gallery-item:nth-child(2) { grid-column: span 3; grid-row: span 1; }
+.gallery-item:nth-child(3) { grid-column: span 3; grid-row: span 1; }
+.gallery-item:nth-child(4) { grid-column: span 3; grid-row: span 2; }
+.gallery-item:nth-child(5) { grid-column: span 5; grid-row: span 1; }
+.gallery-item:nth-child(6) { grid-column: span 4; grid-row: span 1; }
+.gallery-item:nth-child(7) { grid-column: span 4; grid-row: span 2; }
+.gallery-item:nth-child(8) { grid-column: span 5; grid-row: span 1; }
+.gallery-item:nth-child(9) { grid-column: span 3; grid-row: span 1; }
+
+/* ========== ABOUT ========== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: var(--spacing-xl);
+  align-items: center;
+}
+.about-image {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  box-shadow: var(--shadow);
+}
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about-text h3 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 500;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.3;
+}
+.about-text p {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-sm);
+  max-width: 520px;
+}
+.about-quote {
+  font-family: var(--font-script);
+  font-size: clamp(24px, 2.5vw, 34px);
+  color: var(--accent);
+  line-height: 1.3;
+  margin-top: var(--spacing-md);
+  position: relative;
+  padding-left: 24px;
+}
+.about-quote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--accent-2);
+  border-radius: 2px;
+}
+
+/* ========== SERVICES ========== */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+.service-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-md);
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border);
+}
+.service-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-2-light);
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+.service-card h4 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.5vw, 26px);
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+.service-card p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ========== CONTACT ========== */
+.contact {
+  text-align: center;
+  padding: var(--spacing-2xl) 40px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.contact .section-label { display: block; }
+.contact-email {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 500;
+  color: var(--accent);
+  transition: color 0.2s;
+  display: inline-block;
+  margin: var(--spacing-sm) 0 var(--spacing-md);
+}
+.contact-email:hover { color: var(--accent-hover); }
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+.social-links a {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+.social-links a:hover { color: var(--text); }
+
+/* ========== FOOTER ========== */
+.footer {
+  text-align: center;
+  padding: var(--spacing-lg) 40px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* ========== SCROLL REVEAL ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s var(--transition), transform 0.8s var(--transition);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== TWEAKS PANEL ========== */
+.tweaks-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  box-shadow: var(--shadow-hover);
+  transition: transform 0.2s, background 0.2s;
+}
+.tweaks-toggle:hover { background: var(--accent); transform: scale(1.08); }
+.tweaks-toggle.active { background: var(--accent); }
+
+.tweaks-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  width: 260px;
+  background: rgba(60,42,31,0.95);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius);
+  padding: 20px;
+  color: #E8DDD4;
+  font-size: 13px;
+  z-index: 199;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: none;
+}
+.tweaks-panel.open { display: block; }
+.tweaks-panel h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #FBF7F2;
+}
+.tweaks-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.tweaks-row label { opacity: 0.7; }
+.tweaks-row input[type="range"] {
+  width: 100px;
+  accent-color: var(--accent);
+}
+.tweaks-row input[type="color"] {
+  width: 32px;
+  height: 24px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+}
+.tweaks-row select {
+  background: rgba(255,255,255,0.08);
+  color: #E8DDD4;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* ========== QR MODAL ========== */
+.qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+  background: rgba(30,20,14,0.88);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.qr-modal.open { opacity: 1; pointer-events: auto; }
+.qr-modal-card {
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px 36px;
+  text-align: center;
+  max-width: 360px;
+  width: 90vw;
+  box-shadow: 0 32px 64px rgba(60,42,31,0.25), 0 0 0 1px rgba(60,42,31,0.06);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.qr-modal.open .qr-modal-card { transform: translateY(0); }
+.qr-modal-card .qr-img-wrap {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(60,42,31,0.08);
+  padding: 8px;
+}
+.qr-modal-card .qr-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.qr-modal-card .qr-label {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.qr-modal-card .qr-contact-text {
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 300;
+}
+.qr-modal-card .qr-divider {
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  margin: 14px auto;
+}
+.qr-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.qr-modal-close:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+@media (max-width: 640px) {
+  .qr-modal-card { padding: 36px 24px 28px; }
+  .qr-modal-card .qr-img-wrap { width: 160px; height: 160px; }
+  .qr-modal-card .qr-label { font-size: 20px; }
+}
+
+/* ========== SERVICE MODAL ========== */
+.service-card { cursor: pointer; }
+.service-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 310;
+  background: rgba(30,20,14,0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.service-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.service-modal-content {
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  max-width: 920px;
+  width: 92vw;
+  max-height: 86vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.service-modal.open .service-modal-content { transform: translateY(0); }
+.service-modal-img {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+.service-modal-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.service-modal-text {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.service-modal-text h3 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
+.service-modal-text .service-desc {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: var(--spacing-md);
+  font-size: 15px;
+}
+.service-modal-details {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: var(--spacing-md);
+}
+.service-modal-details li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.service-modal-details li::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: 7px;
+}
+.service-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 2;
+  line-height: 1;
+  backdrop-filter: blur(8px);
+}
+.service-modal-close:hover { background: rgba(0,0,0,0.7); }
+
+@media (max-width: 640px) {
+  .service-modal-content {
+    grid-template-columns: 1fr;
+    max-height: 90vh;
+  }
+  .service-modal-img {
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .service-modal-text { padding: var(--spacing-md); }
+}
+
+/* ========== LIGHTBOX ========== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(30,20,14,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.lightbox.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lightbox img {
+  max-width: 88vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  transform: scale(0.95);
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lightbox.open img { transform: scale(1); }
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 2;
+  line-height: 1;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.18); }
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 2;
+  line-height: 1;
+}
+.lightbox-arrow:hover { background: rgba(255,255,255,0.16); }
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+.lightbox-counter {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+/* ========== MOBILE NAV ========== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 150;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--text);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 140;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.mobile-nav.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-nav a {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.2s;
+}
+.mobile-nav a:hover { color: var(--accent); }
+
+/* ========== BLUR-UP LOADING ========== */
+.blur-load {
+  filter: blur(12px);
+  transform: scale(1.06);
+  transition: filter 0.6s ease-out, transform 0.6s ease-out;
+}
+.blur-loaded {
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    padding-top: 80px;
+    min-height: auto;
+  }
+  .hero-image { aspect-ratio: 3/2; max-height: 60vh; }
+  .hero-text { padding-left: 0; }
+  .hero-text h1 { font-size: clamp(40px, 10vw, 64px); }
+
+  .gallery {
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 180px;
+  }
+  .gallery-item:nth-child(1) { grid-column: span 3; grid-row: span 2; }
+  .gallery-item:nth-child(2) { grid-column: span 3; grid-row: span 1; }
+  .gallery-item:nth-child(3) { grid-column: span 3; grid-row: span 1; }
+  .gallery-item:nth-child(4) { grid-column: span 3; grid-row: span 2; }
+  .gallery-item:nth-child(5) { grid-column: span 3; grid-row: span 1; }
+  .gallery-item:nth-child(6) { grid-column: span 3; grid-row: span 1; }
+  .gallery-item:nth-child(7) { grid-column: span 3; grid-row: span 2; }
+  .gallery-item:nth-child(8) { grid-column: span 3; grid-row: span 1; }
+  .gallery-item:nth-child(9) { grid-column: span 3; grid-row: span 1; }
+
+  .about-grid { grid-template-columns: 1fr; gap: var(--spacing-md); }
+  .about-image { max-height: 50vh; aspect-ratio: 4/3; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .nav { padding: 16px 20px; }
+  .nav.scrolled { padding: 10px 20px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .mobile-nav { display: flex; }
+
+  .hero { padding: 80px 20px 0; }
+  .hero-image { aspect-ratio: 4/5; }
+
+  .section { padding: var(--spacing-lg) 20px; }
+
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+    gap: 8px;
+  }
+  .gallery-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+  .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+
+  .services-grid { grid-template-columns: 1fr; }
+
+  .about-quote { font-size: 22px; }
+  .contact { padding: var(--spacing-xl) 20px; }
+
+  .lightbox-arrow { width: 40px; height: 40px; font-size: 26px; }
+  .lightbox-prev { left: 8px; }
+  .lightbox-next { right: 8px; }
+  .lightbox img { max-width: 94vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">林予曦</a>
+  <ul class="nav-links">
+    <li><a href="#works">作品</a></li>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#services">服务</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#works">作品</a>
+  <a href="#about">关于</a>
+  <a href="#services">服务</a>
+  <a href="#contact">联系</a>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-image">
+    <img data-img="hero" src="https://picsum.photos/seed/photographer-hero/800/1000" alt="Hero photograph" loading="eager">
+  </div>
+  <div class="hero-text">
+    <p class="hero-tag">Portrait &amp; Lifestyle</p>
+    <h1>用镜头<span>书写故事</span></h1>
+    <p>捕捉真实的情感与流动的光线——每一帧都是时间的切片，每一张都是属于你的叙事。</p>
+    <a href="#contact" class="hero-cta">
+      预约拍摄 <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ========== SELECTED WORKS ========== -->
+<section class="section" id="works">
+  <p class="section-label reveal">Selected Works</p>
+  <h2 class="section-title reveal">精选作品</h2>
+  <p class="section-desc reveal">每一次快门，都是一次对光、情感与瞬间的朝圣。以下是我近年来的部分创作。</p>
+  <div class="gallery">
+    <div class="gallery-item reveal">
+      <img data-img="gallery1" src="https://picsum.photos/seed/portrait-renxiang/1200/800" alt="暮光 · 人像系列" loading="lazy">
+      <span class="gallery-item-label">暮光 · 人像系列</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery2" src="https://picsum.photos/seed/city-chengshi/600/800" alt="城市碎片" loading="lazy">
+      <span class="gallery-item-label">城市碎片</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery3" src="https://picsum.photos/seed/morning-chenguang/600/400" alt="晨光笔记" loading="lazy">
+      <span class="gallery-item-label">晨光笔记</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery4" src="https://picsum.photos/seed/wedding-hunli/600/800" alt="婚礼纪" loading="lazy">
+      <span class="gallery-item-label">婚礼纪</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery5" src="https://picsum.photos/seed/quiet-jingmi/1000/600" alt="静谧时刻" loading="lazy">
+      <span class="gallery-item-label">静谧时刻</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery6" src="https://picsum.photos/seed/street-renjian/800/600" alt="人间烟火" loading="lazy">
+      <span class="gallery-item-label">人间烟火</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery7" src="https://picsum.photos/seed/mountain-shanhai/800/1000" alt="山海之间" loading="lazy">
+      <span class="gallery-item-label">山海之间</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery8" src="https://picsum.photos/seed/family-jiating/1000/600" alt="家庭肖像" loading="lazy">
+      <span class="gallery-item-label">家庭肖像</span>
+    </div>
+    <div class="gallery-item reveal">
+      <img data-img="gallery9" src="https://picsum.photos/seed/travel-lvtu/600/600" alt="旅途光影" loading="lazy">
+      <span class="gallery-item-label">旅途光影</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="section" id="about">
+  <p class="section-label reveal">About</p>
+  <h2 class="section-title reveal">关于我</h2>
+  <div class="about-grid">
+    <div class="about-image reveal">
+      <img data-img="aboutPortrait" src="https://picsum.photos/seed/about-photographer/600/800" alt="摄影师肖像" loading="lazy">
+    </div>
+    <div class="about-text reveal">
+      <h3>你好，我是予曦。</h3>
+      <p>大学时一台 FM2 胶片机带我走进了摄影的世界。从那以后，我背着相机走过了 20 多个国家、300 多场婚礼、以及无数个平凡却闪光的日常。</p>
+      <p>我相信最好的照片不是「摆出来」的，而是「等来的」——等一阵风，等一个眼神，等光恰好落在对的地方。</p>
+      <p>目前base在上海，接受全球范围内的旅拍与商业委托。</p>
+      <p class="about-quote">
+        摄影是将瞬间变成永恒的温柔革命。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section class="section" id="services">
+  <p class="section-label reveal">Services</p>
+  <h2 class="section-title reveal">服务方向</h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">◈</div>
+      <h4>婚礼纪实</h4>
+      <p>不摆拍、不干预。用最自然的方式记录你们最重要的一天。从晨光准备到夜色散场，全程跟拍。</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">◫</div>
+      <h4>人像写真</h4>
+      <p>个人、情侣、家庭、亲子。在轻松的氛围里捕捉你最好看的样子。室内棚拍或户外外景均可。</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">◎</div>
+      <h4>商业拍摄</h4>
+      <p>品牌画册、产品静物、空间摄影、活动记录。为品牌提供高质量的视觉内容解决方案。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section class="contact reveal" id="contact">
+  <p class="section-label">Let's Talk</p>
+  <h2 class="section-title">一起创造点什么</h2>
+  <p class="section-desc" style="margin: 0 auto var(--spacing-md);">
+    无论你是在筹备一场婚礼、需要一组肖像、还是想要为品牌打造视觉内容——我都很愿意听听你的想法。
+  </p>
+  <a href="mailto:hello@linyuxi.photo" class="contact-email" data-contact="email">hello@linyuxi.photo</a>
+  <div class="social-links">
+    <a href="#" data-contact="xhs">小红书</a>
+    <a href="#" data-contact="ig">Instagram</a>
+    <a href="#" data-contact="wb">微博</a>
+    <a href="#" data-contact="wx">微信</a>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <p>&copy; 2026 林予曦摄影工作室. All rights reserved.</p>
+</footer>
+
+<!-- ========== SERVICE MODAL ========== -->
+<div class="service-modal" id="serviceModal">
+  <div class="service-modal-content">
+    <button class="service-modal-close" id="serviceModalClose" aria-label="关闭">&times;</button>
+    <div class="service-modal-img">
+      <img src="" alt="" id="serviceModalImg">
+    </div>
+    <div class="service-modal-text">
+      <h3 id="serviceModalTitle"></h3>
+      <p class="service-desc" id="serviceModalDesc"></p>
+      <ul class="service-modal-details" id="serviceModalDetails"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ========== QR MODAL ========== -->
+<div class="qr-modal" id="qrModal">
+  <button class="qr-modal-close" id="qrModalClose">&times;</button>
+  <div class="qr-modal-card">
+    <div class="qr-img-wrap">
+      <img src="" alt="" id="qrModalImg">
+    </div>
+    <div class="qr-label" id="qrModalLabel"></div>
+    <div class="qr-divider"></div>
+    <div class="qr-contact-text" id="qrModalText"></div>
+  </div>
+</div>
+
+<!-- ========== LIGHTBOX ========== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="关闭">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" id="lightboxPrev" aria-label="上一张">&lsaquo;</button>
+  <img src="" alt="" id="lightboxImg">
+  <button class="lightbox-arrow lightbox-next" id="lightboxNext" aria-label="下一张">&rsaquo;</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+<!-- ========== TWEAKS ========== -->
+<button class="tweaks-toggle" id="tweaksToggle" title="Tweaks">&#9881;</button>
+<div class="tweaks-panel" id="tweaksPanel">
+  <h4>Tweaks</h4>
+  <div class="tweaks-row">
+    <label>点缀色</label>
+    <input type="color" id="tweakAccent" value="#C0673D">
+  </div>
+  <div class="tweaks-row">
+    <label>图像圆角</label>
+    <input type="range" id="tweakRadius" min="0" max="32" value="16">
+  </div>
+  <div class="tweaks-row">
+    <label>背景温度</label>
+    <select id="tweakBg">
+      <option value="warm" selected>暖调</option>
+      <option value="cool">冷调</option>
+      <option value="neutral">中性</option>
+    </select>
+  </div>
+  <div class="tweaks-row">
+    <label>版式密度</label>
+    <select id="tweakDensity">
+      <option value="comfortable" selected>舒适</option>
+      <option value="compact">紧凑</option>
+    </select>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+// ============================================================
+//  图片集中配置 —— 修改这里的 URL 即可替换全站图片
+//  替换为你的真实作品路径，例如：images/portrait-01.jpg
+// ============================================================
+var IMG = {
+  hero:          'https://picsum.photos/seed/photographer-hero/800/1000',
+  aboutPortrait: 'images/about-portrait.png',
+  gallery1:      'https://picsum.photos/seed/portrait-renxiang/1200/800',
+  gallery2:      'https://picsum.photos/seed/city-chengshi/600/800',
+  gallery3:      'https://picsum.photos/seed/morning-chenguang/600/400',
+  gallery4:      'https://picsum.photos/seed/wedding-hunli/600/800',
+  gallery5:      'https://picsum.photos/seed/quiet-jingmi/1000/600',
+  gallery6:      'https://picsum.photos/seed/street-renjian/800/600',
+  gallery7:      'https://picsum.photos/seed/mountain-shanhai/800/1000',
+  gallery8:      'https://picsum.photos/seed/family-jiating/1000/600',
+  gallery9:      'https://picsum.photos/seed/travel-lvtu/600/600',
+  svcWedding:    'https://picsum.photos/seed/wedding-detail/600/800',
+  svcPortrait:   'https://picsum.photos/seed/portrait-detail/600/800',
+  svcCommercial: 'https://picsum.photos/seed/commercial-detail/600/800'
+};
+(function() {
+
+// 初始化所有图片 src（优先读 IndexedDB 上传的图片）
+var storedImgs = {};
+(function initImages() {
+  var dbReq = indexedDB.open('portfolio_db', 2);
+  dbReq.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('images')) db.createObjectStore('images');
+    if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
+  };
+  dbReq.onsuccess = function(e) {
+    var db = e.target.result;
+    var tx = db.transaction('images', 'readonly');
+    var store = tx.objectStore('images');
+    var keysReq = store.getAllKeys();
+    var valsReq = store.getAll();
+    keysReq.onsuccess = function() {
+      var keys = keysReq.result;
+      valsReq.onsuccess = function() {
+        var vals = valsReq.result;
+        keys.forEach(function(k, i) { storedImgs[k] = vals[i]; });
+        db.close();
+        applyImages();
+      };
+    };
+  };
+  dbReq.onerror = function() {
+    applyImages();
+  };
+})();
+
+// 监听后台管理页的图片更新，自动同步无需手动刷新
+try {
+  var syncChannel = new BroadcastChannel('portfolio_sync');
+  syncChannel.onmessage = function() {
+    // 重新加载图片
+    (function reloadImages() {
+      var dbReq2 = indexedDB.open('portfolio_db', 2);
+      dbReq2.onsuccess = function(e) {
+        var db = e.target.result;
+        var tx = db.transaction('images','readonly');
+        var store = tx.objectStore('images');
+        var kReq = store.getAllKeys();
+        var vReq = store.getAll();
+        kReq.onsuccess = function() {
+          var keys = kReq.result;
+          vReq.onsuccess = function() {
+            var vals = vReq.result;
+            keys.forEach(function(k, i) { storedImgs[k] = vals[i]; });
+            db.close();
+            applyImages();
+          };
+        };
+      };
+    })();
+    // 重新加载联系方式
+    (function reloadContact() {
+      var dbReq3 = indexedDB.open('portfolio_db', 2);
+      dbReq3.onsuccess = function(e) {
+        var db = e.target.result;
+        var tx = db.transaction('settings','readonly');
+        var kReq = tx.objectStore('settings').getAllKeys();
+        var vReq = tx.objectStore('settings').getAll();
+        kReq.onsuccess = function() {
+          var keys = kReq.result;
+          vReq.onsuccess = function() {
+            var vals = vReq.result;
+            var settings = {};
+            keys.forEach(function(k,i) { settings[k] = vals[i]; });
+            db.close();
+            applyContact(settings);
+          };
+        };
+      };
+    })();
+  };
+} catch(e) { /* BroadcastChannel not supported */ }
+
+function applyImages() {
+  document.querySelectorAll('[data-img]').forEach(function(el) {
+    var key = el.getAttribute('data-img');
+    if (storedImgs[key]) { el.src = storedImgs[key]; }
+    else if (IMG[key]) { el.src = IMG[key]; }
+  });
+  loadContactInfo();
+}
+
+function loadContactInfo() {
+  var dbReq2 = indexedDB.open('portfolio_db', 2);
+  dbReq2.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
+  };
+  dbReq2.onsuccess = function(e) {
+    var db = e.target.result;
+    var tx = db.transaction('settings','readonly');
+    var kReq = tx.objectStore('settings').getAllKeys();
+    var vReq = tx.objectStore('settings').getAll();
+    kReq.onsuccess = function() {
+      var keys = kReq.result;
+      vReq.onsuccess = function() {
+        var vals = vReq.result;
+        var settings = {};
+        keys.forEach(function(k,i) { settings[k] = vals[i]; });
+        db.close();
+        applyContact(settings);
+      };
+    };
+  };
+  dbReq2.onerror = function() { /* use defaults */ };
+}
+
+var contactSettings = {}; // 全局缓存
+
+function applyContact(s) {
+  contactSettings = s || {};
+  var email = s.contact_email;
+  var emailEl = document.querySelector('[data-contact="email"]');
+  if (email && emailEl) {
+    emailEl.textContent = email;
+    emailEl.href = 'mailto:' + email;
+  }
+  var socialMap = { xhs:'contact_xhs', ig:'contact_ig', wb:'contact_wb', wx:'contact_wx' };
+  Object.keys(socialMap).forEach(function(key) {
+    var val = s[socialMap[key]];
+    var el = document.querySelector('[data-contact="'+key+'"]');
+    if (val && el) el.textContent = val;
+  });
+}
+
+// === QR 弹窗 ===
+var qrModal = document.getElementById('qrModal');
+var qrModalImg = document.getElementById('qrModalImg');
+var qrModalLabel = document.getElementById('qrModalLabel');
+var qrModalText = document.getElementById('qrModalText');
+
+function openQrModal(key) {
+  var labelMap = { xhs:'小红书', ig:'Instagram', wb:'微博', wx:'微信' };
+  var qrKey = 'qr_' + key;
+  var textKey = 'contact_' + key;
+  var qrSrc = contactSettings[qrKey] || '';
+  var label = labelMap[key] || key;
+  var text = contactSettings[textKey] || '';
+
+  var wrap = document.querySelector('.qr-img-wrap');
+  if (qrSrc) {
+    qrModalImg.src = qrSrc;
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+  qrModalLabel.textContent = label;
+  qrModalText.textContent = text || '暂无联系方式';
+  qrModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQrModal() {
+  qrModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.social-links a[data-contact]').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.preventDefault();
+    var key = el.getAttribute('data-contact');
+    if (key && key !== 'email') openQrModal(key);
+  });
+});
+
+document.getElementById('qrModalClose').addEventListener('click', closeQrModal);
+qrModal.addEventListener('click', function(e) {
+  if (e.target === qrModal) closeQrModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && qrModal.classList.contains('open')) {
+    closeQrModal();
+  }
+});
+  // === NAVIGATION SCROLL ===
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // === STAGGER SCROLL REVEAL ===
+  // Assign stagger delays to reveal elements within each section
+  document.querySelectorAll('.section, .hero, .contact').forEach(section => {
+    const reveals = section.querySelectorAll('.reveal');
+    reveals.forEach((el, i) => {
+      el.style.transitionDelay = (i * 80) + 'ms';
+    });
+  });
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // === LIGHTBOX ===
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+  let lightboxImages = [];
+  let lightboxIndex = 0;
+
+  function openLightbox(index) {
+    lightboxImages = Array.from(document.querySelectorAll('.gallery-item img'));
+    lightboxIndex = index;
+    updateLightbox();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateLightbox() {
+    lightboxImg.style.opacity = '0';
+    setTimeout(function() {
+      lightboxImg.src = lightboxImages[lightboxIndex].src.replace(/\/\d+\/\d+$/, '/1200/800');
+      lightboxCounter.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
+    }, 180);
+  }
+  lightboxImg.addEventListener('load', function() {
+    lightboxImg.style.opacity = '1';
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function nextLightbox() {
+    lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+    updateLightbox();
+  }
+
+  function prevLightbox() {
+    lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+    updateLightbox();
+  }
+
+  document.querySelectorAll('.gallery-item').forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i));
+  });
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxNext').addEventListener('click', nextLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', prevLightbox);
+
+  // Lightbox: click backdrop to close
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Lightbox: swipe support
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) {
+      dx > 0 ? prevLightbox() : nextLightbox();
+    }
+  });
+
+  // Keyboard: lightbox + global nav
+  document.addEventListener('keydown', function(e) {
+    if (serviceModal.classList.contains('open')) {
+      if (e.key === 'Escape') closeServiceModal();
+      return;
+    }
+    if (lightbox.classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
+      if (e.key === 'ArrowRight') nextLightbox();
+      return;
+    }
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+      closeMobileNav();
+    }
+  });
+
+  // === SERVICE MODAL ===
+  var serviceModal = document.getElementById('serviceModal');
+  var serviceModalImg = document.getElementById('serviceModalImg');
+  var serviceModalTitle = document.getElementById('serviceModalTitle');
+  var serviceModalDesc = document.getElementById('serviceModalDesc');
+  var serviceModalDetails = document.getElementById('serviceModalDetails');
+
+  var serviceData = [
+    {
+      title: '婚礼纪实',
+      desc: '婚礼是一生中最重要的时刻之一。我选择用不打扰的方式记录——没有刻意的摆拍，没有生硬的干预，只是安静地观察、等待，捕捉那些真实流动的瞬间：新娘化妆时的一丝紧张、新郎等待时的深呼吸、父母眼角闪过的泪光、晚宴上放肆的大笑。这些才是婚礼真正的质地。',
+      details: ['全程跟拍 8–12 小时，覆盖晨光准备到夜色散场', '精修 400+ 张照片，全部调色处理', '包含在线私密相册 + USB 精装交付', '可加选胶片相机记录（Contax 645 / Pentax 67）', '支持国内及海外目的地婚礼'],
+      img: IMG.svcWedding,
+      imgKey: 'svcWedding'
+    },
+    {
+      title: '人像写真',
+      desc: '人像写真不只是一张好看的照片。它记录的是当下的你——你的状态、你的情绪、你所处的生命阶段。无论是个人形象照、情侣合影、家庭肖像还是亲子记录，我会在轻松自然的氛围里引导你放松下来，找到属于你的光线和角度。棚拍有精致的光影控制，外景有自然的呼吸感；两种方式都为你保留。',
+      details: ['个人写真 / 情侣照 / 家庭合影 / 亲子记录', '室内棚拍或户外自然光场景任选', '精修 30–80 张，含妆造建议与风格沟通', '拍摄时长 2–4 小时，不赶工、不流水线', '可提供服装搭配建议与场地推荐'],
+      img: IMG.svcPortrait,
+      imgKey: 'svcPortrait'
+    },
+    {
+      title: '商业拍摄',
+      desc: '品牌需要统一的视觉语言——这是我做商业拍摄的核心信念。从产品静物的极致光影、到空间建筑的结构感、再到品牌活动的氛围捕捉，我会在前期充分沟通品牌调性，制定分镜方案，确保交付的每一张图都符合品牌的视觉标准，并且可以直接投入使用。',
+      details: ['品牌画册 / 产品静物 / 空间建筑 / 活动记录', '前期分镜沟通 + 视觉风格方案', '专业灯光设备与多机位保障', '精修商业级交付，满足印刷与数字双用途', '可配合品牌长期合作，提供季度视觉内容服务'],
+      img: IMG.svcCommercial,
+      imgKey: 'svcCommercial'
+    }
+  ];
+
+  function openServiceModal(index) {
+    var data = serviceData[index];
+    serviceModalImg.src = storedImgs[data.imgKey] || data.img;
+    serviceModalImg.alt = data.title;
+    serviceModalTitle.textContent = data.title;
+    serviceModalDesc.textContent = data.desc;
+    serviceModalDetails.innerHTML = data.details.map(function(d) {
+      return '<li>' + d + '</li>';
+    }).join('');
+    serviceModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeServiceModal() {
+    serviceModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.service-card').forEach(function(card, i) {
+    card.addEventListener('click', function() { openServiceModal(i); });
+  });
+
+  document.getElementById('serviceModalClose').addEventListener('click', closeServiceModal);
+  serviceModal.addEventListener('click', function(e) {
+    if (e.target === serviceModal) closeServiceModal();
+  });
+
+  // === MOBILE NAV ===
+  var hamburger = document.getElementById('hamburger');
+  var mobileNav = document.getElementById('mobileNav');
+
+  function closeMobileNav() {
+    mobileNav.classList.remove('open');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', () => {
+    const open = !mobileNav.classList.contains('open');
+    mobileNav.classList.toggle('open', open);
+    hamburger.classList.toggle('active', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  mobileNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMobileNav);
+  });
+
+  // === BLUR-UP IMAGE LOADING ===
+  document.querySelectorAll('img').forEach(img => {
+    if (img.complete) {
+      img.classList.add('blur-loaded');
+    } else {
+      img.classList.add('blur-load');
+      img.addEventListener('load', function() {
+        img.classList.add('blur-loaded');
+      });
+    }
+  });
+
+  // === TWEAKS PANEL ===
+  const tweaksToggle = document.getElementById('tweaksToggle');
+  const tweaksPanel = document.getElementById('tweaksPanel');
+
+  tweaksToggle.addEventListener('click', () => {
+    const open = tweaksPanel.classList.toggle('open');
+    tweaksToggle.classList.toggle('active', open);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!tweaksPanel.contains(e.target) && e.target !== tweaksToggle) {
+      tweaksPanel.classList.remove('open');
+      tweaksToggle.classList.remove('active');
+    }
+  });
+
+  // Tweaks: Accent color
+  document.getElementById('tweakAccent').addEventListener('input', function(e) {
+    document.documentElement.style.setProperty('--accent', e.target.value);
+    document.documentElement.style.setProperty('--accent-hover', e.target.value + 'CC');
+  });
+
+  // Tweaks: Image border radius
+  document.getElementById('tweakRadius').addEventListener('input', function(e) {
+    var v = e.target.value + 'px';
+    document.documentElement.style.setProperty('--radius', v);
+    document.documentElement.style.setProperty('--radius-lg', (parseInt(e.target.value) + 4) + 'px');
+    document.querySelectorAll('.hero-image, .gallery-item, .about-image').forEach(function(el) {
+      el.style.borderRadius = v;
+    });
+  });
+
+  // Tweaks: Background temperature
+  document.getElementById('tweakBg').addEventListener('change', function(e) {
+    var v = e.target.value;
+    var root = document.documentElement;
+    if (v === 'warm') {
+      root.style.setProperty('--bg', '#FBF7F2');
+      root.style.setProperty('--bg-card', '#F5EFE7');
+    } else if (v === 'cool') {
+      root.style.setProperty('--bg', '#F4F6F8');
+      root.style.setProperty('--bg-card', '#EAEDF0');
+    } else {
+      root.style.setProperty('--bg', '#F8F8F7');
+      root.style.setProperty('--bg-card', '#F0F0EE');
+    }
+  });
+
+  // Tweaks: Density
+  document.getElementById('tweakDensity').addEventListener('change', function(e) {
+    var compact = e.target.value === 'compact';
+    document.documentElement.style.setProperty('--spacing-xl', compact ? '80px' : '120px');
+    document.documentElement.style.setProperty('--spacing-2xl', compact ? '100px' : '160px');
+    document.documentElement.style.setProperty('--spacing-lg', compact ? '40px' : '64px');
+  });
+
+})();
+</script>
+
+</body>
+</html>
